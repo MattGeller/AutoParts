@@ -136,7 +136,7 @@ public:
 	//getter for quarts
 	int getQuarts() const;
 
-private:
+protected:
 	string weight;
 	string type;
 	int quarts;
@@ -144,6 +144,23 @@ private:
 
 class Tires : public Parts
 {
+public:
+	//default constructor
+	Tires();
+
+	//parameterized constructor
+	Tires(string description, double price, string manufacturer, int qtySold, string size, string waranty);
+
+	//getter for size
+	string getSize() const;
+
+	//getter for waranty
+	string getWaranty() const;
+
+protected:
+	string size;
+	string waranty;
+
 };
 
 void parseLineToTokens(string lineText, string tokens[]);
@@ -226,6 +243,14 @@ Oil::Oil(string description, double price, string manufacturer, int qtySold, str
 string Oil::getWeight() const { return weight; }
 string Oil::getType() const { return type; }
 int Oil::getQuarts() const { return quarts; }
+
+Tires::Tires()
+	:Parts(), size(), waranty()
+{}
+
+Tires::Tires(string description, double price, string manufacturer, int qtySold, string size, string waranty)
+	:Parts(description, price, manufacturer, qtySold), size(size), waranty(waranty)
+{}
 
 // Parse a line of text into tokens and store them in an array of strings
 void parseLineToTokens(string lineText, string tokens[])
