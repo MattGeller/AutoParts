@@ -120,6 +120,26 @@ protected:
 
 class Oil : public Parts
 {
+public:
+	//default constructor
+	Oil();
+
+	//parameterized constructor
+	Oil(string description, double price, string manufacturer, int qtySold, string weight, string type, int quarts);
+
+	//getter for weight
+	string getWeight() const;
+
+	//getter for type
+	string getType() const;
+
+	//getter for quarts
+	int getQuarts() const;
+
+private:
+	string weight;
+	string type;
+	int quarts;
 };
 
 class Tires : public Parts
@@ -187,7 +207,7 @@ Lights::Lights()
 {}
 
 Lights::Lights(string description, double price, string manufacturer, int qtySold, string carBrand, string carModel, int carYear, double watts)
-	: Parts(description, price, manufacturer, qtySold), car(carBrand, carModel, carYear), watts(watts)
+	:Parts(description, price, manufacturer, qtySold), car(carBrand, carModel, carYear), watts(watts)
 {}
 
 double Lights::getWatts() const { return watts; }
@@ -195,8 +215,17 @@ string Lights::getBrand() const { return car.getBrand(); }
 string Lights::getModel() const { return car.getModel(); }
 int Lights::getYear() const { return car.getYear(); }
 
+Oil::Oil()
+	:Parts(), weight(""), type(""), quarts(0)
+{}
 
+Oil::Oil(string description, double price, string manufacturer, int qtySold, string weight, string type, int quarts)
+	:Parts(description, price, manufacturer, qtySold), weight(weight), type(type), quarts(quarts)
+{}
 
+string Oil::getWeight() const { return weight; }
+string Oil::getType() const { return type; }
+int Oil::getQuarts() const { return quarts; }
 
 // Parse a line of text into tokens and store them in an array of strings
 void parseLineToTokens(string lineText, string tokens[])
