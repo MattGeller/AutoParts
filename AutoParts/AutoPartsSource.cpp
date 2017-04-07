@@ -67,10 +67,55 @@ protected:
 
 class Brakes : public Parts
 {
+public:
+	//default constructor for Brakes
+	Brakes();
+
+	//parameterized constructor for Brakes
+	Brakes(string description, double price, string manufacturer, int qtySold, string carBrand, string carModel, int carYear, string material);
+
+	//getter for material
+	string getMaterial() const;
+
+	//getter for car brand
+	string getBrand() const;
+
+	//getter for car model
+	string getModel() const;
+
+	//getter for car year
+	int getYear() const;
+
+protected:
+	Car car;
+	string material;
+
 };
 
 class Lights : public Parts
 {
+public:
+	//default constructor for Brakes
+	Lights();
+
+	//parameterized constructor for Brakes
+	Lights(string description, double price, string manufacturer, int qtySold, string carBrand, string carModel, int carYear, double watts);
+
+	//getter for watts
+	double getWatts() const;
+
+	//getter for car brand
+	string getBrand() const;
+
+	//getter for car model
+	string getModel() const;
+
+	//getter for car year
+	int getYear() const;
+
+protected:
+	Car car;
+	double watts;
 };
 
 class Oil : public Parts
@@ -122,6 +167,35 @@ string Parts::getDescription() const { return description; }
 double Parts::getPrice() const { return price; }
 string Parts::getManufacturer() const { return manufacturer; }
 int Parts::getQtySold() const { return qtySold; }
+
+Brakes::Brakes()
+	:car(), material("")
+{}
+
+Brakes::Brakes(string description, double price, string manufacturer, int qtySold, string carBrand, string carModel, int carYear, string material)
+	:Parts(description, price, manufacturer, qtySold), car(carBrand,carModel, carYear), material(material)
+{}
+
+string Brakes::getMaterial() const { return material; }
+string Brakes::getBrand() const { return car.getBrand(); }
+string Brakes::getModel() const { return car.getModel(); }
+int Brakes::getYear() const { return car.getYear(); }
+
+
+Lights::Lights()
+	:car(), watts(0)
+{}
+
+Lights::Lights(string description, double price, string manufacturer, int qtySold, string carBrand, string carModel, int carYear, double watts)
+	: Parts(description, price, manufacturer, qtySold), car(carBrand, carModel, carYear), watts(watts)
+{}
+
+double Lights::getWatts() const { return watts; }
+string Lights::getBrand() const { return car.getBrand(); }
+string Lights::getModel() const { return car.getModel(); }
+int Lights::getYear() const { return car.getYear(); }
+
+
 
 
 // Parse a line of text into tokens and store them in an array of strings
