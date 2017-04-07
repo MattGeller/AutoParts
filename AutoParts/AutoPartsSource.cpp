@@ -168,6 +168,12 @@ void parseLineToTokens(string lineText, string tokens[]);
 int main()
 {
 	//open the file from which to read the data
+	ifstream inFile("PartsList.txt");
+	if (!inFile)
+	{
+		cerr << "Couldn't find a file to analyze" << endl;
+		exit(1);
+	}
 
 	//call a global function to find out how many objects of each type to create
 
