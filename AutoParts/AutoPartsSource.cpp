@@ -39,6 +39,30 @@ private:
 
 class Parts
 {
+public:
+	//default constructor
+	Parts();
+
+	//parameterized constructor
+	Parts(string desc, double price, string manufacturer, int qtySold);
+
+	//getter for description
+	string getDescription() const;
+
+	//getter for price
+	double getPrice() const;
+
+	//getter for manufacturer
+	string getManufacturer() const;
+
+	//getter for qtySold
+	int getQtySold() const;
+
+protected:
+	string description;
+	double price;
+	string manufacturer;
+	int qtySold;
 };
 
 class Brakes : public Parts
@@ -81,6 +105,23 @@ Car::Car()
 Car::Car(string b, string m, int y)
 	:brand(b), model(m), year(y)
 {}
+
+string Car::getBrand() const { return brand; }
+string Car::getModel() const { return model; }
+int Car::getYear() const { return year; }
+
+Parts::Parts()
+	:description(""), price(0), manufacturer(""), qtySold(0)
+{}
+
+Parts::Parts(string description, double price, string manufacturer, int qtySold)
+	:description(description), price(price), manufacturer(manufacturer), qtySold(qtySold)
+{}
+
+string Parts::getDescription() const { return description; }
+double Parts::getPrice() const { return price; }
+string Parts::getManufacturer() const { return manufacturer; }
+int Parts::getQtySold() const { return qtySold; }
 
 
 // Parse a line of text into tokens and store them in an array of strings
