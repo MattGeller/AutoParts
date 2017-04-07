@@ -258,6 +258,9 @@ Tires::Tires(string description, double price, string manufacturer, int qtySold,
 	:Parts(description, price, manufacturer, qtySold), size(size), waranty(waranty)
 {}
 
+string Tires::getSize() const { return size; }
+string Tires::getWaranty() const { return waranty; }
+
 // Parse a line of text into tokens and store them in an array of strings
 void parseLineToTokens(string lineText, string tokens[])
 {
