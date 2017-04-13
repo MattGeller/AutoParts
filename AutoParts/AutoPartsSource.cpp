@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-#define PARTINFO_CNT 10
+#define PARTINFO_CNT 15
 
 using namespace std;
 
@@ -163,28 +163,71 @@ protected:
 
 };
 
+//overload for << operator and Brakes
+ostream& operator<<(ostream &os, const Brakes &brakes);
+
+//counts the number of various car parts passed in from a file, and returns the number of each of them found
+int* countParts(ifstream &inFile);
+
+//reads information in from a file into properly sized arrays of objects
+void populatePartArrays(ifstream &inFile, Brakes* brakesArray, Lights* lightsArray, Oil* oilArray, Tires* TiresArray, int* counts);
+
+//finds the best brakes in an array of brakes
+Brakes& findBestBrakes(Brakes* brakeArray, int count);
+
+//finds the best lights in an array of lights
+Lights& findBestLights(Lights* lightArray, int count);
+
+//finds the best oil in an array of oil
+Oil& findBestOil(Oil* oilArray, int count);
+
+//find the best tires in an array of tires
+Tires& findBestTires(Tires* tiresArray, int count);
+
+//takes in one of each part and prints their info to a file
+void printPartsToFile(Brakes brakes, Lights lights, Oil oil, Tires tires);
+
 void parseLineToTokens(string lineText, string tokens[]);
 
 int main()
 {
 	//open the file from which to read the data
-	ifstream inFile("PartsList.txt");
+	ifstream inFile;
+	inFile.open("Parts_List.txt");
 	if (!inFile)
 	{
 		cerr << "Couldn't find a file to analyze" << endl;
 		exit(1);
 	}
 
+	string rawDataTokens[PARTINFO_CNT];
+
 	//call a global function to find out how many objects of each type to create
+	int* myCounts = countParts(inFile);
 
 	//create arrays to contain the necessary objects
+	Brakes* brakesArray = new Brakes[myCounts[0]];
+	Lights* lightsArray = new Lights[myCounts[1]];
+	Oil* oilArray = new Oil[myCounts[2]];
+	Tires* tiresArray = new Tires[myCounts[3]];
 
 	//global function to read information from the file into the arrays of objects
+	populatePartArrays(inFile, brakesArray, lightsArray, oilArray, tiresArray, myCounts);
 
 	//call functions to find the best selling item for each category, output best to a file
+	Brakes &bestBrakes = findBestBrakes(brakesArray, myCounts[0]);
+	Lights &bestLights = findBestLights(lightsArray, myCounts[1]);
+	Oil &bestOil = findBestOil(oilArray, myCounts[2]);
+	Tires &bestTires = findBestTires(tiresArray, myCounts[3]);
+
+	printPartsToFile(bestBrakes, bestLights, bestOil, bestTires);
 
 	//close the file explicitly
+	inFile.close();
 }
+
+
+
 
 Car::Car()
 	:brand(""), model(""), year(0)
@@ -224,6 +267,11 @@ string Brakes::getBrand() const { return car.getBrand(); }
 string Brakes::getModel() const { return car.getModel(); }
 int Brakes::getYear() const { return car.getYear(); }
 
+ostream& operator <<(ostream &os, const Brakes &brakes)
+{
+	os << "**Brakes**" << endl; // figure out if you're doing this right
+	return os;
+}
 
 Lights::Lights()
 	:car(), watts(0)
@@ -260,6 +308,48 @@ Tires::Tires(string description, double price, string manufacturer, int qtySold,
 
 string Tires::getSize() const { return size; }
 string Tires::getWaranty() const { return waranty; }
+
+
+int* countParts(ifstream &inFile)
+{//ipass in an array !!
+	int countArray[4]; //0=Brakes  1=Lights  2=Oil  3=Tires
+	string tokens[15];
+	while (inFile)
+	{
+		string wholeLine;
+		getline(inFile, wholeLine);
+		parseLineToTokens(wholeLine, tokens);
+		if (tokens[0] == "Brakes")
+		{
+			countArray[0]++;
+			cout << "counted a brake!\n";
+		}
+
+		else if (tokens[0] == "Lights")
+		{
+			countArray[1]++;
+			cout << "counted lights!\n";
+		}
+
+		else if (tokens[0] == "Oil")
+		{
+			countArray[2]++;
+			cout << "counted oil!\n";
+		}
+
+		else if (tokens[0] == "Tires")
+		{
+			countArray[3]++;
+			cout << "counted tires!\n";
+		}
+
+		
+	}
+
+	return countArray;
+}
+
+
 
 // Parse a line of text into tokens and store them in an array of strings
 void parseLineToTokens(string lineText, string tokens[])
