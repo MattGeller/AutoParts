@@ -203,7 +203,7 @@ int main()
 	string rawDataTokens[PARTINFO_CNT];
 
 	//call a global function to find out how many objects of each type to create
-	int* myCounts = countParts(inFile);
+	int* myCounts = countParts(inFile); //don't do this! instead, make an array of myCounts a line above and pass it in to coutParts as a parameter.
 
 	//create arrays to contain the necessary objects
 	Brakes* brakesArray = new Brakes[myCounts[0]];
