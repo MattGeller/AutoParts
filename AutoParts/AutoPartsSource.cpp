@@ -10,6 +10,7 @@
 #include <string>
 
 #define PARTINFO_CNT 15
+#define PARTTYPES_CNT 4
 
 using namespace std;
 
@@ -57,6 +58,9 @@ public:
 
 	//getter for qtySold
 	int getQtySold() const;
+
+	//returns the gross sum for the product
+	double getGrossSum() const;
 
 protected:
 	string description;
@@ -167,7 +171,7 @@ protected:
 ostream& operator<<(ostream &os, const Brakes &brakes);
 
 //counts the number of various car parts passed in from a file, and returns the number of each of them found
-int* countParts(ifstream &inFile);
+void countParts(ifstream &inFile, int *counterArray);
 
 //reads information in from a file into properly sized arrays of objects
 void populatePartArrays(ifstream &inFile, Brakes* brakesArray, Lights* lightsArray, Oil* oilArray, Tires* TiresArray, int* counts);
@@ -203,7 +207,8 @@ int main()
 	string rawDataTokens[PARTINFO_CNT];
 
 	//call a global function to find out how many objects of each type to create
-	int* myCounts = countParts(inFile); //don't do this! instead, make an array of myCounts a line above and pass it in to coutParts as a parameter.
+	int myCounts[4]; //0=Brakes  1=Lights  2=Oil  3=Tires
+	countParts(inFile, myCounts);
 
 	//create arrays to contain the necessary objects
 	Brakes* brakesArray = new Brakes[myCounts[0]];
@@ -215,7 +220,7 @@ int main()
 	populatePartArrays(inFile, brakesArray, lightsArray, oilArray, tiresArray, myCounts);
 
 	//call functions to find the best selling item for each category, output best to a file
-	Brakes &bestBrakes = findBestBrakes(brakesArray, myCounts[0]);
+	//Brakes &bestBrakes = findBestBrakes(brakesArray, myCounts[0]);
 	//Lights &bestLights = findBestLights(lightsArray, myCounts[1]);
 	//Oil &bestOil = findBestOil(oilArray, myCounts[2]);
 	//Tires &bestTires = findBestTires(tiresArray, myCounts[3]);
@@ -227,14 +232,12 @@ int main()
 }
 
 
-//testing?
-
 Car::Car()
 	:brand(""), model(""), year(0)
 {}
 
 Car::Car(string b, string m, int y)
-	:brand(b), model(m), year(y)
+	: brand(b), model(m), year(y)
 {}
 
 string Car::getBrand() const { return brand; }
@@ -246,20 +249,21 @@ Parts::Parts()
 {}
 
 Parts::Parts(string description, double price, string manufacturer, int qtySold)
-	:description(description), price(price), manufacturer(manufacturer), qtySold(qtySold)
+	: description(description), price(price), manufacturer(manufacturer), qtySold(qtySold)
 {}
 
 string Parts::getDescription() const { return description; }
 double Parts::getPrice() const { return price; }
 string Parts::getManufacturer() const { return manufacturer; }
 int Parts::getQtySold() const { return qtySold; }
+double Parts::getGrossSum() const { return (price * qtySold); }
 
 Brakes::Brakes()
 	:car(), material("")
 {}
 
 Brakes::Brakes(string description, double price, string manufacturer, int qtySold, string carBrand, string carModel, int carYear, string material)
-	:Parts(description, price, manufacturer, qtySold), car(carBrand,carModel, carYear), material(material)
+	: Parts(description, price, manufacturer, qtySold), car(carBrand, carModel, carYear), material(material)
 {}
 
 string Brakes::getMaterial() const { return material; }
@@ -278,7 +282,7 @@ Lights::Lights()
 {}
 
 Lights::Lights(string description, double price, string manufacturer, int qtySold, string carBrand, string carModel, int carYear, double watts)
-	:Parts(description, price, manufacturer, qtySold), car(carBrand, carModel, carYear), watts(watts)
+	: Parts(description, price, manufacturer, qtySold), car(carBrand, carModel, carYear), watts(watts)
 {}
 
 double Lights::getWatts() const { return watts; }
@@ -291,7 +295,7 @@ Oil::Oil()
 {}
 
 Oil::Oil(string description, double price, string manufacturer, int qtySold, string weight, string type, int quarts)
-	:Parts(description, price, manufacturer, qtySold), weight(weight), type(type), quarts(quarts)
+	: Parts(description, price, manufacturer, qtySold), weight(weight), type(type), quarts(quarts)
 {}
 
 string Oil::getWeight() const { return weight; }
@@ -303,55 +307,96 @@ Tires::Tires()
 {}
 
 Tires::Tires(string description, double price, string manufacturer, int qtySold, string size, string waranty)
-	:Parts(description, price, manufacturer, qtySold), size(size), waranty(waranty)
+	: Parts(description, price, manufacturer, qtySold), size(size), waranty(waranty)
 {}
 
 string Tires::getSize() const { return size; }
 string Tires::getWaranty() const { return waranty; }
 
 
-int* countParts(ifstream &inFile)
-{//ipass in an array !!
-	int countArray[4]; //0=Brakes  1=Lights  2=Oil  3=Tires
-	string tokens[15];
-	while (inFile)
+void countParts(ifstream &inFile, int *countArray)
+{
+	for (int i = 0; i < PARTTYPES_CNT; i++)
 	{
-		string wholeLine;
-		getline(inFile, wholeLine);
-		parseLineToTokens(wholeLine, tokens);
-		if (tokens[0] == "Brakes")
+		countArray[i] = 0;
+	}
+	//0=Brakes  1=Lights  2=Oil  3=Tires
+
+	while (inFile.good())
+	{
+		string myString = "";
+		getline(inFile, myString);
+		myString = myString.substr(1, myString.find(',') - 2);
+		if (myString == "Brakes")
 		{
 			countArray[0]++;
 			cout << "counted a brake!\n";
 		}
 
-		else if (tokens[0] == "Lights")
+		else if (myString == "Lights")
 		{
 			countArray[1]++;
 			cout << "counted lights!\n";
 		}
 
-		else if (tokens[0] == "Oil")
+		else if (myString == "Oil")
 		{
 			countArray[2]++;
 			cout << "counted oil!\n";
 		}
 
-		else if (tokens[0] == "Tires")
+		else if (myString == "Tires")
 		{
 			countArray[3]++;
 			cout << "counted tires!\n";
 		}
-
-		
 	}
 
-	return countArray;
+	inFile.clear();
+	inFile.seekg(0, ios::beg);
 }
 
 void populatePartArrays(ifstream &inFile, Brakes* brakesArray, Lights* lightsArray, Oil* oilArray, Tires* TiresArray, int* counts)
 {
 	cout << "In populatePartArrays()!" << endl << endl;
+
+	int brakesCounter = 0;
+	int lightsCounter = 0;
+	int oilCounter = 0;
+	int tiresCounter = 0;
+
+	string tokens[15];
+	while (inFile.good())
+	{
+		string wholeLine = "";
+		getline(inFile, wholeLine);
+		parseLineToTokens(wholeLine, tokens);
+		if (tokens[0] == "Brakes")
+		{
+			Brakes temp(tokens[1], stod(tokens[2]), tokens[3], stoi(tokens[4]), tokens[5], tokens[6], stoi(tokens[7]), tokens[8]);
+			brakesArray[brakesCounter++] = temp;
+		}
+
+		if (tokens[0] == "Lights")
+		{
+			Lights temp(tokens[1], stod(tokens[2]), tokens[3], stoi(tokens[4]), tokens[5], tokens[6], stoi(tokens[7]), stod(tokens[9]));
+			lightsArray[lightsCounter++] = temp;
+		}
+
+		if (tokens[0] == "Oil")
+		{
+			Oil temp(tokens[1], stod(tokens[2]), tokens[3], stoi(tokens[4]), tokens[10], tokens[11], stoi(tokens[12]));
+			oilArray[oilCounter++] = temp;
+		}
+
+		if (tokens[0] == "Tires")
+		{
+			Tires temp(tokens[1], stod(tokens[2]), tokens[3], stoi(tokens[4]), tokens[13], tokens[14]);
+			TiresArray[tiresCounter++] = temp;
+		}
+
+	}
+
 }
 
 Brakes& findBestBrakes(Brakes* brakeArray, int count)
