@@ -220,7 +220,7 @@ int main()
 	populatePartArrays(inFile, brakesArray, lightsArray, oilArray, tiresArray, myCounts);
 
 	//call functions to find the best selling item for each category, output best to a file
-	//Brakes &bestBrakes = findBestBrakes(brakesArray, myCounts[0]);
+	Brakes &bestBrakes = findBestBrakes(brakesArray, myCounts[0]);
 	//Lights &bestLights = findBestLights(lightsArray, myCounts[1]);
 	//Oil &bestOil = findBestOil(oilArray, myCounts[2]);
 	//Tires &bestTires = findBestTires(tiresArray, myCounts[3]);
@@ -358,7 +358,6 @@ void countParts(ifstream &inFile, int *countArray)
 
 void populatePartArrays(ifstream &inFile, Brakes* brakesArray, Lights* lightsArray, Oil* oilArray, Tires* TiresArray, int* counts)
 {
-	cout << "In populatePartArrays()!" << endl << endl;
 
 	int brakesCounter = 0;
 	int lightsCounter = 0;
@@ -402,7 +401,15 @@ void populatePartArrays(ifstream &inFile, Brakes* brakesArray, Lights* lightsArr
 Brakes& findBestBrakes(Brakes* brakeArray, int count)
 {
 	cout << "In findBestBrakes()" << endl << endl;
-	return brakeArray[0];
+	Brakes &bestBrakes = brakeArray[0];
+	for (int i = 1; i < count; i++)
+	{
+		if (brakeArray[i].getGrossSum() > bestBrakes.getGrossSum())
+		{
+			bestBrakes = brakeArray[i];
+		}
+	}
+	return bestBrakes;
 }
 
 
