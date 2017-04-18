@@ -188,18 +188,6 @@ void countParts(ifstream &inFile, int *counterArray);
 //reads information in from a file into properly sized arrays of objects
 void populatePartArrays(ifstream &inFile, Brakes* brakesArray, Lights* lightsArray, Oil* oilArray, Tires* TiresArray, int* counts);
 
-//finds the best brakes in an array of brakes
-Brakes& findBestBrakes(Brakes* brakeArray, int count);
-
-//finds the best lights in an array of lights
-Lights& findBestLights(Lights* lightArray, int count);
-
-//finds the best oil in an array of oil
-Oil& findBestOil(Oil* oilArray, int count);
-
-//find the best tires in an array of tires
-Tires& findBestTires(Tires* tiresArray, int count);
-
 //finds the best (highest grossing) part when an array of parts and the length of that array are passed in
 template <class T>
 T& findBestPart(T* partArray, int count)
@@ -218,6 +206,7 @@ T& findBestPart(T* partArray, int count)
 //takes in one of each part and prints their info to a file
 void printPartsToFile(const Brakes &brakes, const Lights &lights, const Oil &oil, const Tires &tires);
 
+//takes in a string from a file and separates the string into tokens
 void parseLineToTokens(string lineText, string tokens[]);
 
 int main()
@@ -257,7 +246,6 @@ int main()
 	//close the file explicitly
 	inFile.close();
 }
-
 
 Car::Car()
 	:brand(""), model(""), year(0)
@@ -389,7 +377,6 @@ ostream& operator<<(ostream &os, const Tires &tires)
 	return os;
 }
 
-
 void countParts(ifstream &inFile, int *countArray)
 {
 	for (int i = 0; i < PARTTYPES_CNT; i++)
@@ -406,25 +393,21 @@ void countParts(ifstream &inFile, int *countArray)
 		if (myString == "Brakes")
 		{
 			countArray[0]++;
-			cout << "counted a brake!\n";
 		}
 
 		else if (myString == "Lights")
 		{
 			countArray[1]++;
-			cout << "counted lights!\n";
 		}
 
 		else if (myString == "Oil")
 		{
 			countArray[2]++;
-			cout << "counted oil!\n";
 		}
 
 		else if (myString == "Tires")
 		{
 			countArray[3]++;
-			cout << "counted tires!\n";
 		}
 	}
 
@@ -469,23 +452,7 @@ void populatePartArrays(ifstream &inFile, Brakes* brakesArray, Lights* lightsArr
 			Tires temp(tokens[1], stod(tokens[2]), tokens[3], stoi(tokens[4]), tokens[13], tokens[14]);
 			TiresArray[tiresCounter++] = temp;
 		}
-
 	}
-
-}
-
-Brakes& findBestBrakes(Brakes* brakeArray, int count)
-{
-	cout << "In findBestBrakes()" << endl << endl;
-	Brakes &bestBrakes = brakeArray[0];
-	for (int i = 1; i < count; i++)
-	{
-		if (brakeArray[i].getGrossSum() > bestBrakes.getGrossSum())
-		{
-			bestBrakes = brakeArray[i];
-		}
-	}
-	return bestBrakes;
 }
 
 void printPartsToFile(const Brakes &brakes, const Lights &lights, const Oil &oil, const Tires &tires)
@@ -502,7 +469,6 @@ void printPartsToFile(const Brakes &brakes, const Lights &lights, const Oil &oil
 	outputFile << brakes << endl << lights << endl << oil << endl << tires;
 }
 
-
 // Parse a line of text into tokens and store them in an array of strings
 void parseLineToTokens(string lineText, string tokens[])
 {
@@ -517,17 +483,3 @@ void parseLineToTokens(string lineText, string tokens[])
 		start = end;
 	}
 }
-
-
-
-// Notes:
-//
-// Example:
-// To create an array of 'cnt' Books items, where 'cnt' can only be determined at the time the program is run:
-//   Books *booksList;
-//   booksList = new Books[cnt];
-//
-//
-// To go back and read from the beginning of the file that was already opened and read till the EOF
-//   bookFile.clear();			// reset the EOF state
-//   bookFile.seekg(0, ios::beg);	// set pointer at the beginning of the file		
