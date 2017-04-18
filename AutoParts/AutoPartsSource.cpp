@@ -467,6 +467,7 @@ void printPartsToFile(const Brakes &brakes, const Lights &lights, const Oil &oil
 	}
 
 	outputFile << brakes << endl << lights << endl << oil << endl << tires;
+	outputFile.close();
 }
 
 // Parse a line of text into tokens and store them in an array of strings
