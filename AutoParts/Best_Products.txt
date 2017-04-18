@@ -1,0 +1,38 @@
+**Brakes**
+	Description: ProACT Premium Disc Brake Pads
+	Price: $149.85
+	Manufacturer: Akebono
+	QtySold: 99
+	Car: 
+		Brand: Lexus
+		Model: LS460
+		Year: 2012
+	Material: Ceramic
+
+**Lights**
+	Description: SilverStar Headlight Bulb
+	Price: $26.99
+	Manufacturer: Sylvania
+	QtySold: 342
+	Car: 
+		Brand: Honda
+		Model: Civic
+		Year: 1993
+	Watts: 60
+
+**Oil**
+	Description: Mobil Super Motor Oil
+	Price: $7.49
+	Manufacturer: Mobil
+	QtySold: 322
+	Weight: 0W-20
+	Type: Synthetic
+	Quarts: 1
+
+**Tires**
+	Description: Altimax
+	Price: $89.99
+	Manufacturer: General
+	QtySold: 14
+	Size: P225/70R16
+	Warranty: 60000

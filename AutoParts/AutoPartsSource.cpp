@@ -90,6 +90,9 @@ public:
 	//getter for car year
 	int getYear() const;
 
+	//overload for << operator
+	friend ostream& operator<< (ostream &os, const Brakes &brakes);
+
 protected:
 	Car car;
 	string material;
@@ -117,6 +120,9 @@ public:
 	//getter for car year
 	int getYear() const;
 
+	//overload for << operator
+	friend ostream& operator<< (ostream &os, const Lights &lights);
+
 protected:
 	Car car;
 	double watts;
@@ -140,6 +146,9 @@ public:
 	//getter for quarts
 	int getQuarts() const;
 
+	//overload for << operator
+	friend ostream& operator<< (ostream &os, const Oil &oil);
+
 protected:
 	string weight;
 	string type;
@@ -160,6 +169,9 @@ public:
 
 	//getter for waranty
 	string getWaranty() const;
+
+	//overload for << operator
+	friend ostream& operator<< (ostream &os, const Tires &tires);
 
 protected:
 	string size;
@@ -203,22 +215,8 @@ T& findBestPart(T* partArray, int count)
 	return bestPart;
 }
 
-//Brakes& findBestBrakes(Brakes* brakeArray, int count)
-//{
-//	cout << "In findBestBrakes()" << endl << endl;
-//	Brakes &bestBrakes = brakeArray[0];
-//	for (int i = 1; i < count; i++)
-//	{
-//		if (brakeArray[i].getGrossSum() > bestBrakes.getGrossSum())
-//		{
-//			bestBrakes = brakeArray[i];
-//		}
-//	}
-//	return bestBrakes;
-//}
-
 //takes in one of each part and prints their info to a file
-void printPartsToFile(Brakes brakes, Lights lights, Oil oil, Tires tires);
+void printPartsToFile(const Brakes &brakes, const Lights &lights, const Oil &oil, const Tires &tires);
 
 void parseLineToTokens(string lineText, string tokens[]);
 
@@ -249,13 +247,12 @@ int main()
 	populatePartArrays(inFile, brakesArray, lightsArray, oilArray, tiresArray, myCounts);
 
 	//call functions to find the best selling item for each category, output best to a file
-	//Brakes &bestBrakes = findBestBrakes(brakesArray, myCounts[0]);
 	Brakes &bestBrakes = findBestPart(brakesArray, myCounts[0]);
-	//Lights &bestLights = findBestLights(lightsArray, myCounts[1]);
-	//Oil &bestOil = findBestOil(oilArray, myCounts[2]);
-	//Tires &bestTires = findBestTires(tiresArray, myCounts[3]);
+	Lights &bestLights = findBestPart(lightsArray, myCounts[1]);
+	Oil &bestOil = findBestPart(oilArray, myCounts[2]);
+	Tires &bestTires = findBestPart(tiresArray, myCounts[3]);
 
-	//printPartsToFile(bestBrakes, bestLights, bestOil, bestTires);
+	printPartsToFile(bestBrakes, bestLights, bestOil, bestTires);
 
 	//close the file explicitly
 	inFile.close();
@@ -301,12 +298,6 @@ string Brakes::getBrand() const { return car.getBrand(); }
 string Brakes::getModel() const { return car.getModel(); }
 int Brakes::getYear() const { return car.getYear(); }
 
-ostream& operator <<(ostream &os, const Brakes &brakes)
-{
-	os << "**Brakes**" << endl; // figure out if you're doing this right
-	return os;
-}
-
 Lights::Lights()
 	:car(), watts(0)
 {}
@@ -342,6 +333,61 @@ Tires::Tires(string description, double price, string manufacturer, int qtySold,
 
 string Tires::getSize() const { return size; }
 string Tires::getWaranty() const { return waranty; }
+
+ostream& operator<<(ostream &os, const Brakes &brakes)
+{
+	os << "**Brakes**" << endl;
+	os << "\tDescription: " << brakes.description << endl;
+	os << "\tPrice: $" << brakes.price << endl;
+	os << "\tManufacturer: " << brakes.manufacturer << endl;
+	os << "\tQtySold: " << brakes.qtySold << endl;
+	os << "\tCar: \n";
+	os << "\t\tBrand: " << brakes.getBrand() << endl;
+	os << "\t\tModel: " << brakes.getModel() << endl;
+	os << "\t\tYear: " << brakes.getYear() << endl;
+	os << "\tMaterial: " << brakes.material << endl;
+	return os;
+}
+
+ostream& operator<<(ostream &os, const Lights &lights)
+{
+	os << "**Lights**" << endl;
+	os << "\tDescription: " << lights.description << endl;
+	os << "\tPrice: $" << lights.price << endl;
+	os << "\tManufacturer: " << lights.manufacturer << endl;
+	os << "\tQtySold: " << lights.qtySold << endl;
+	os << "\tCar: \n";
+	os << "\t\tBrand: " << lights.getBrand() << endl;
+	os << "\t\tModel: " << lights.getModel() << endl;
+	os << "\t\tYear: " << lights.getYear() << endl;
+	os << "\tWatts: " << lights.watts << endl;
+	return os;
+}
+
+ostream& operator<<(ostream &os, const Oil &oil)
+{
+	os << "**Oil**" << endl;
+	os << "\tDescription: " << oil.description << endl;
+	os << "\tPrice: $" << oil.price << endl;
+	os << "\tManufacturer: " << oil.manufacturer << endl;
+	os << "\tQtySold: " << oil.qtySold << endl;
+	os << "\tWeight: " << oil.weight << endl;
+	os << "\tType: " << oil.type << endl;
+	os << "\tQuarts: " << oil.quarts << endl;
+	return os;
+}
+
+ostream& operator<<(ostream &os, const Tires &tires)
+{
+	os << "**Tires**" << endl;
+	os << "\tDescription: " << tires.description << endl;
+	os << "\tPrice: $" << tires.price << endl;
+	os << "\tManufacturer: " << tires.manufacturer << endl;
+	os << "\tQtySold: " << tires.qtySold << endl;
+	os << "\tSize: " << tires.size << endl;
+	os << "\tWarranty: " << tires.waranty << endl;
+	return os;
+}
 
 
 void countParts(ifstream &inFile, int *countArray)
@@ -442,6 +488,19 @@ Brakes& findBestBrakes(Brakes* brakeArray, int count)
 	return bestBrakes;
 }
 
+void printPartsToFile(const Brakes &brakes, const Lights &lights, const Oil &oil, const Tires &tires)
+{
+	ofstream outputFile;
+	outputFile.open("Best_Products.txt");
+
+	if (!outputFile)
+	{
+		cerr << "Error making output file" << endl;
+		exit(1);
+	}
+
+	outputFile << brakes << endl << lights << endl << oil << endl << tires;
+}
 
 
 // Parse a line of text into tokens and store them in an array of strings
