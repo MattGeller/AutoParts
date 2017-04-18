@@ -188,6 +188,35 @@ Oil& findBestOil(Oil* oilArray, int count);
 //find the best tires in an array of tires
 Tires& findBestTires(Tires* tiresArray, int count);
 
+//finds the best (highest grossing) part when an array of parts and the length of that array are passed in
+template <class T>
+T& findBestPart(T* partArray, int count)
+{
+	T &bestPart = partArray[0];
+	for (int i = 1; i < count; i++)
+	{
+		if (partArray[i].getGrossSum() > bestPart.getGrossSum())
+		{
+			bestPart = partArray[i];
+		}
+	}
+	return bestPart;
+}
+
+//Brakes& findBestBrakes(Brakes* brakeArray, int count)
+//{
+//	cout << "In findBestBrakes()" << endl << endl;
+//	Brakes &bestBrakes = brakeArray[0];
+//	for (int i = 1; i < count; i++)
+//	{
+//		if (brakeArray[i].getGrossSum() > bestBrakes.getGrossSum())
+//		{
+//			bestBrakes = brakeArray[i];
+//		}
+//	}
+//	return bestBrakes;
+//}
+
 //takes in one of each part and prints their info to a file
 void printPartsToFile(Brakes brakes, Lights lights, Oil oil, Tires tires);
 
@@ -220,7 +249,8 @@ int main()
 	populatePartArrays(inFile, brakesArray, lightsArray, oilArray, tiresArray, myCounts);
 
 	//call functions to find the best selling item for each category, output best to a file
-	Brakes &bestBrakes = findBestBrakes(brakesArray, myCounts[0]);
+	//Brakes &bestBrakes = findBestBrakes(brakesArray, myCounts[0]);
+	Brakes &bestBrakes = findBestPart(brakesArray, myCounts[0]);
 	//Lights &bestLights = findBestLights(lightsArray, myCounts[1]);
 	//Oil &bestOil = findBestOil(oilArray, myCounts[2]);
 	//Tires &bestTires = findBestTires(tiresArray, myCounts[3]);
